@@ -1,5 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { screen, render } from '@testing-library/react'
+import '@testing-library/jest-dom'
 import App from './App'
 
 /** 
@@ -8,8 +10,20 @@ import App from './App'
  is not required.
 **/
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  ReactDOM.render(<App />, div)
+describe('General app functionality', () => {
+  it('renders without crashing', () => {
+    const div = document.createElement('div')
+    ReactDOM.render(<App />, div)
+  })
+
+  it('shows MyReads title', () => {
+    render(<App />)
+    expect(screen.getByText('MyReads')).toBeInTheDocument()
+  })
+  it('shows 3 shelves for books', () => {
+    render(<App />)
+    const bookshelves = document.getElementsByClassName('bookshelf')
+    expect(bookshelves.length).toEqual(3)
+  })
 })
 
