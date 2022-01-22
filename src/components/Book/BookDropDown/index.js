@@ -8,7 +8,7 @@ const BookDropDown = (props) => {
     <div className="book-shelf-changer">
       <select
         onChange={(e) => updateBooks(e.target.value)}
-        value={props.bookItem.shelf ? props.bookItem.shelf : "none"}
+        value={props.bookObject.shelf ? props.bookObject.shelf : "none"}
       >
         <option value="move" disabled>
           Move to...
@@ -23,7 +23,7 @@ const BookDropDown = (props) => {
 };
 
 BookDropDown.propTypes = {
-  bookItem: PropTypes.object.isRequired,
+    bookObject: PropTypes.object.isRequired,
 };
 
 export default BookDropDown;
