@@ -15,8 +15,11 @@ const BooksApp = () => {
       .then((data) => setBooks(data));
   }, []);
 
-  const updateBooks = () => {
-    setBooks([]);
+  const updateBooks = (bookID, shelfChange) => {
+    const bookToUpdate = books.find(book => book.id === bookID)
+    bookToUpdate.shelf = shelfChange
+    const updatedBooks = books.map(book => book.id === bookID ? bookToUpdate : book)
+    setBooks(updatedBooks)
   };
 
   return (
