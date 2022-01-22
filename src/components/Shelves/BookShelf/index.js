@@ -1,29 +1,47 @@
 import React, { useContext } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import AppContext from "../../../Context";
 import Book from "../../Book";
+import { useDrop } from "react-dnd";
 
 const BookShelf = ({ shelfName }) => {
-    const { books } = useContext(AppContext);
-    const booksInThisShelf = books.filter(book => book.shelf === shelfName)
-    const listBooks = booksInThisShelf.map(
-        book => (
-        <li key={book.id}>
-            <Book bookObject={book}/>
-        </li>
-            )
-        )
+  const { books } = useContext(AppContext);
+  let backgroundColor = "white"
+
+  const [{ isOver, isOverCurrent }, drop] = useDrop(() => ({
+    accept: "Book",
+    drop(item) {
+      const { bookId, updateBooks } = item;
+      updateBooks(bookId, shelfName);
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      isOverCurrent: monitor.isOver({ shallow: true }),
+    }),
+  }));
+
+  if (isOverCurrent || isOver) {
+    backgroundColor = '#cdfca5'
+  }
+
+  const booksInThisShelf = books.filter((book) => book.shelf === shelfName);
+  const listBooks = booksInThisShelf.map((book) => (
+    <li key={book.id}>
+      <Book bookObject={book} />
+    </li>
+  ));
+
   return (
-    <div className="bookshelf-books">
+    <div style={{ backgroundColor }} ref={drop} className="bookshelf-books">
       <ol className="books-grid">
-        {booksInThisShelf.length > 0  ? listBooks : 'Empty...'}
+        {booksInThisShelf.length > 0 ? listBooks : "Empty..."}
       </ol>
     </div>
   );
 };
 
 BookShelf.propTypes = {
-    shelfName: PropTypes.string.isRequired
-}
+  shelfName: PropTypes.string.isRequired,
+};
 
 export default BookShelf;
