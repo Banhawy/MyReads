@@ -5,11 +5,13 @@
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
+    "lodash.debounce": "^4.0.8",
     "prop-types": "^15.6.2",
     "react": "^16.8.0",
     "react-dnd": "^14.0.5",
     "react-dnd-html5-backend": "^14.1.0",
     "react-dom": "^16.8.0",
+    "react-loader-spinner": "^5.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.0"
   },
