@@ -53,7 +53,7 @@ export const DraggableBook = ({ bookObject }) => {
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "Book",
-    item: { bookId: bookObject.id, updateBooks },
+    item: { bookId: bookObject, updateBooks },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),

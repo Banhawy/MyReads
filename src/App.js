@@ -11,15 +11,33 @@ const BooksApp = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    BooksAPI.getAll()
-      .then((data) => setBooks(data));
+    BooksAPI.getAll().then((data) => setBooks(data));
   }, []);
 
-  const updateBooks = (bookID, shelfChange) => {
-    const bookToUpdate = books.find(book => book.id === bookID)
-    bookToUpdate.shelf = shelfChange
-    const updatedBooks = books.map(book => book.id === bookID ? bookToUpdate : book)
-    setBooks(updatedBooks)
+  const addNewBookToState = (newBook, shelf) => {
+    newBook.shelf = shelf;
+    const updatedBooks = [...books, newBook];
+    setBooks(updatedBooks);
+  };
+
+  const updateExistingBook = (bookToUpdate, shelf) => {
+    bookToUpdate.shelf = shelf;
+    const updatedBooks = books.map((book) =>
+      book.id === bookToUpdate.id ? bookToUpdate : book
+    );
+    setBooks(updatedBooks);
+  };
+
+  const updateBooks = async (bookToChange, shelfChange) => {
+    let bookToUpdate = books.find((book) => book.id === bookToChange.id);
+
+    if (!bookToUpdate) {
+      addNewBookToState(bookToChange, shelfChange);
+    } else {
+      updateExistingBook(bookToUpdate, shelfChange);
+    }
+
+    await BooksAPI.update(bookToChange, shelfChange);
   };
 
   return (

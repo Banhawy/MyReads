@@ -7,7 +7,7 @@ const BookDropDown = (props) => {
   return (
     <div className="book-shelf-changer">
       <select
-        onChange={(e) => updateBooks(props.bookObject.id, e.target.value)}
+        onChange={(e) => updateBooks(props.bookObject, e.target.value)}
         value={props.bookObject.shelf ? props.bookObject.shelf : "none"}
       >
         <option value="move" disabled>
