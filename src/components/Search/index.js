@@ -23,6 +23,11 @@ const Search = () => {
     setIsLoading(false);
   };
 
+  /**
+   * This function will find the book shelf in the app's state and update it in the given books array
+   * @param {string} bookID the book id of the changed book
+   * @param {Array} queriedBooks the array of books returned from API call
+   */
   const updateBooks = (bookID, queriedBooks) => {
     const bookToUpdate = queriedBooks.find((book) => book.id === bookID);
     bookToUpdate.shelf = getShelfFromState(bookToUpdate.id);
@@ -32,7 +37,12 @@ const Search = () => {
     queriedBooks = updatedBooks;
   };
 
-  const scanBooks = (queriedBooks) => {
+  /**
+   * Scans the given books array for any books that already exist in global app state and reconciles the
+   * difference in shelf names
+   * @param {Array} queriedBooks the array of books returned from API call
+   */
+  const scanBooksAndUpdateState = (queriedBooks) => {
     if (queriedBooks.error) {
       resetView();
       return;
@@ -54,13 +64,13 @@ const Search = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchApi = (query) => {
     search(query)
-      .then((books) => scanBooks(books))
+      .then((books) => scanBooksAndUpdateState(books))
       .catch((err) => {
         console.error(err);
         setIsLoading(false);
       });
   };
-  
+
   const debounceAndSearch = useCallback(
     debounce((nextValue) => searchApi(nextValue), 2000),
     [searchApi]
@@ -74,6 +84,12 @@ const Search = () => {
   };
 
   useEffect(() => {
+    /**
+     * Updates the search state books array with the given book's shelf name
+     * fetched from the app's state
+     * @param {string} bookID the book id to update
+     * @param {Array} searchStateBooks array of books in the search view
+     */
     const updateBooks = (bookID, searchStateBooks) => {
       const bookToUpdate = searchStateBooks.find((book) => book.id === bookID);
       bookToUpdate.shelf = getShelfFromState(bookToUpdate.id);
@@ -90,6 +106,10 @@ const Search = () => {
       doesBookExistInSearchState(book.id)
     );
 
+    /**
+     * For every book returned in the search API that already is on one of the shelves
+     * updates that book's shelf name status in the search view state
+     */
     const updateSearchStateBooks = () => {
       const filteredBooksCopy = [...filteredBooks];
       existingFilteredBooks.forEach((book) => {
@@ -101,7 +121,7 @@ const Search = () => {
     if (existingFilteredBooks.length > 0) {
       updateSearchStateBooks();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [books]);
 
   return (

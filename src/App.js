@@ -28,6 +28,11 @@ const BooksApp = () => {
     setBooks(updatedBooks);
   };
 
+  /**
+   * A function that updates the books array in the app's global state
+   * @param {Object} bookToChange the book object being added to or updated in the app's state
+   * @param {string} shelfChange the new shelf name of to assign to the book
+   */
   const updateBooks = async (bookToChange, shelfChange) => {
     let bookToUpdate = books.find((book) => book.id === bookToChange.id);
 

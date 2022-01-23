@@ -25,7 +25,7 @@ const BookShelf = ({ shelfName }) => {
   }
 
   const booksInThisShelf = books.filter((book) => book.shelf === shelfName);
-  const listBooks = booksInThisShelf.map((book) => (
+  const listBooksInShelf = booksInThisShelf.map((book) => (
     <li key={book.id}>
       <DraggableBook bookObject={book} />
     </li>
@@ -34,7 +34,7 @@ const BookShelf = ({ shelfName }) => {
   return (
     <div style={{ backgroundColor }} ref={drop} className="bookshelf-books">
       <ol className="books-grid">
-        {booksInThisShelf.length > 0 ? listBooks : "Empty..."}
+        {booksInThisShelf.length > 0 ? listBooksInShelf : "Empty..."}
       </ol>
     </div>
   );
