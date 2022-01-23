@@ -71,6 +71,7 @@ const Search = () => {
       });
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceAndSearch = useCallback(
     debounce((nextValue) => searchApi(nextValue), 2000),
     [searchApi]
