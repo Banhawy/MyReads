@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import debounce from "lodash.debounce";
 import { search } from "../../BooksAPI";
@@ -12,8 +12,9 @@ const Search = () => {
   const [filteredBooks, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const doesBookExistInState = (bookID) =>
+  const doesBookExistInAppState = (bookID) =>
     books.filter((book) => book.id === bookID).length > 0;
+
   const getShelfFromState = (bookID) =>
     books.find((book) => book.id === bookID).shelf;
 
@@ -38,7 +39,7 @@ const Search = () => {
     }
     const queriedBooksCopy = queriedBooks;
     const existingBooks = queriedBooks
-      ? queriedBooks.filter((book) => doesBookExistInState(book.id))
+      ? queriedBooks.filter((book) => doesBookExistInAppState(book.id))
       : [];
 
     if (existingBooks.length > 0) {
@@ -50,6 +51,7 @@ const Search = () => {
     setIsLoading(false);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const searchApi = (query) => {
     search(query)
       .then((books) => scanBooks(books))
@@ -58,9 +60,10 @@ const Search = () => {
         setIsLoading(false);
       });
   };
+  
   const debounceAndSearch = useCallback(
     debounce((nextValue) => searchApi(nextValue), 2000),
-    [books]
+    [searchApi]
   );
 
   const handleChange = (e) => {
@@ -69,6 +72,38 @@ const Search = () => {
     setIsLoading(true);
     value ? debounceAndSearch(value) : resetView();
   };
+
+  useEffect(() => {
+    const updateBooks = (bookID, searchStateBooks) => {
+      const bookToUpdate = searchStateBooks.find((book) => book.id === bookID);
+      bookToUpdate.shelf = getShelfFromState(bookToUpdate.id);
+      const updatedBooks = searchStateBooks.map((book) =>
+        book.id === bookID ? bookToUpdate : book
+      );
+      searchStateBooks = updatedBooks;
+    };
+
+    const doesBookExistInSearchState = (bookID) =>
+      filteredBooks.filter((book) => book.id === bookID).length > 0;
+
+    const existingFilteredBooks = books.filter((book) =>
+      doesBookExistInSearchState(book.id)
+    );
+
+    const updateSearchStateBooks = () => {
+      const filteredBooksCopy = [...filteredBooks];
+      existingFilteredBooks.forEach((book) => {
+        updateBooks(book.id, filteredBooksCopy);
+      });
+      setBooks(filteredBooksCopy);
+    };
+
+    if (existingFilteredBooks.length > 0) {
+      updateSearchStateBooks();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [books]);
+
   return (
     <div className="search-books">
       <div className="search-books-bar">
