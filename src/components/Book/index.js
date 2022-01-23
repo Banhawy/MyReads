@@ -6,41 +6,37 @@ import AppContext from "../../Context";
 
 const Book = (props) => {
   const { bookObject } = props;
-  const {
-    imageLinks: { smallThumbnail },
-    title,
-    authors,
-    publisher
-  } = bookObject;
-
+  const { title, authors, publisher } = bookObject;
+  const smallThumbnail = bookObject.imageLinks
+    ? bookObject.imageLinks.smallThumbnail
+    : "http://lgimages.s3.amazonaws.com/nc-sm.gif";
   const getAuthorsOrPublisher = () => {
     if (authors) {
-      return authors.length > 1 ? authors.join(", ") : authors[0]
+      return authors.length > 1 ? authors.join(", ") : authors[0];
     }
     if (publisher) {
-      return publisher
+      return publisher;
     }
-    return 'UNKNOWN'
-  }
+    return "UNKNOWN";
+  };
 
   return (
-      <div className="book">
-        <div className="book-top">
-          <div
-            className="book-cover"
-            style={{
-              width: 128,
-              height: 193,
-              backgroundImage: `url(${smallThumbnail})`,
-            }}
-          ></div>
-          <BookDropDown bookObject={bookObject} />
-        </div>
-        <div className="book-title">{title}</div>
-        <div className="book-authors">
-          {getAuthorsOrPublisher()}
-        </div>
+    <div className="book">
+      <div className="book-top">
+        <div
+          className="book-cover"
+          style={{
+            width: 128,
+            height: 193,
+            backgroundImage: `url(${smallThumbnail})`,
+            backgroundSize: 'cover'
+          }}
+        ></div>
+        <BookDropDown bookObject={bookObject} />
       </div>
+      <div className="book-title">{title}</div>
+      <div className="book-authors">{getAuthorsOrPublisher()}</div>
+    </div>
   );
 };
 
