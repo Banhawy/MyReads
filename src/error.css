@@ -1,0 +1,20 @@
+.error-page {
+    background: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+img {
+    height: 50%;
+    width: 50%;
+    margin: 2rem;
+}
+
+button {
+    padding: 1.5rem;
+    background-color: #fdb83ab8;
+    color: #cb3f3f;
+    font-size: larger;
+    font-family: fantasy;
+}
