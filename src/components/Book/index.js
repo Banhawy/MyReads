@@ -5,35 +5,25 @@ import { useDrag } from "react-dnd";
 import AppContext from "../../Context";
 
 const Book = (props) => {
-  const { updateBooks } = useContext(AppContext);
-
   const { bookObject } = props;
   const {
     imageLinks: { smallThumbnail },
     title,
     authors,
-    id
+    publisher
   } = bookObject;
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "Book",
-    item: { bookId: id,  updateBooks},
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
-
+  const getAuthorsOrPublisher = () => {
+    if (authors) {
+      return authors.length > 1 ? authors.join(", ") : authors[0]
+    }
+    if (publisher) {
+      return publisher
+    }
+    return 'UNKNOWN'
+  }
 
   return (
-    <div
-      ref={drag}
-      style={{
-        opacity: isDragging ? 0.5 : 1,
-        fontSize: 25,
-        fontWeight: "bold",
-        cursor: "move",
-      }}
-    >
       <div className="book">
         <div className="book-top">
           <div
@@ -48,10 +38,9 @@ const Book = (props) => {
         </div>
         <div className="book-title">{title}</div>
         <div className="book-authors">
-          {authors.length > 1 ? authors.join(", ") : authors[0]}
+          {getAuthorsOrPublisher()}
         </div>
       </div>
-    </div>
   );
 };
 
@@ -59,4 +48,29 @@ Book.propTypes = {
   bookObject: PropTypes.object.isRequired,
 };
 
+export const DraggableBook = ({ bookObject }) => {
+  const { updateBooks } = useContext(AppContext);
+
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "Book",
+    item: { bookId: bookObject.id, updateBooks },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <div
+      ref={drag}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        fontSize: 25,
+        fontWeight: "bold",
+        cursor: "move",
+      }}
+    >
+      <Book bookObject={bookObject} />
+    </div>
+  );
+};
 export default Book;

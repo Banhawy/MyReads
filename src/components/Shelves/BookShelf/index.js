@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import AppContext from "../../../Context";
-import Book from "../../Book";
+import { DraggableBook } from "../../Book";
 import { useDrop } from "react-dnd";
 
 const BookShelf = ({ shelfName }) => {
@@ -27,7 +27,7 @@ const BookShelf = ({ shelfName }) => {
   const booksInThisShelf = books.filter((book) => book.shelf === shelfName);
   const listBooks = booksInThisShelf.map((book) => (
     <li key={book.id}>
-      <Book bookObject={book} />
+      <DraggableBook bookObject={book} />
     </li>
   ));
 
